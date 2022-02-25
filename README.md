@@ -1,4 +1,4 @@
-# hov
+# Define
 A command for defining words with a dictionary api
 
 # Usage
