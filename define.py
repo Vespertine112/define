@@ -17,19 +17,15 @@ def main():
         '-e',
         help="Include extraneous information"
     )
-    args = parser.parse_args()  
+    args_space, word = parser.parse_known_args()
     
-    search_string = ""
-    # FIX THIS HACK CRAP
-    if len(sys.argv) > 1:
-        if args.e == None:
-            search_string = "+".join(sys.argv[1:])
-        else:
-            search_string = "+".join(sys.argv[2:])
-
+    if args_space.e != None:
+        search_string = args_space.e
     else:
-        while search_string == "":
-            search_string = pyip.inputStr("Please enter a search query:")
+        search_string = "+".join(word)
+
+    while word == None:
+        search_string = pyip.inputStr("Please enter a search query:")
     
     req = requests.get(api_url_init + search_string)
     try:
@@ -39,7 +35,6 @@ def main():
         sys.exit(1)
     
     if  req.json() is not None:
-        print("\n")
         for entry in req.json():
             for meaning in entry["meanings"]:
                 part_o_speech = meaning["partOfSpeech"]
@@ -49,7 +44,7 @@ def main():
                             example = defnitions["example"]
                         except:
                             example = "No example provided"
-                        if args.e == None:
+                        if args_space.e == None:
                             print(f"{search_string} : {part_o_speech}\n > {text}")
                         else:
                             print(f"{search_string} : {part_o_speech}\n > {text}\nExample: {example}\n")
